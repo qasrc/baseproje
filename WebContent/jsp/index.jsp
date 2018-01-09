@@ -160,7 +160,7 @@
     <div data-options="region:'north',split:true" style="background-color: #037cec;overflow: hidden;height: 10%;">
 
         <div style="float: left;">
-            <img src="${staticPath}/images/logoAll.png"
+            <img src="${staticPath}/images/a.png"
                  style="width: 110px;height: 40px;margin-top: 10px;margin-left: 10px"/>
         </div>
         <div style="float: left;">
