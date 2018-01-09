@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.basic.mapper.ResourceMapper">
+    <resultMap id="BaseResultMap" type="com.basic.model.Resource">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="pid" property="pid" jdbcType="BIGINT"/>
+        <result column="seq" property="seq" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="resourcestype" property="resourcetype" jdbcType="TINYINT"/>
+        <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
+        <result column="sys_name" property="sysname" jdbcType="VARCHAR"/>
+        <result column="expnad" property="expand" jdbcType="VARCHAR"/>
+        <result column="menu" property="menu" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+  <sql id="Base_Column_List">
+      id, name, url, description, icon, pid, seq, status, resourcestype, createdate,sys_name,expnad,menu
+  </sql>
+
+    <select id="findResourceById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from RESOURCES
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 查询所有父菜单 -->
+    <select id="findResourceAllByTypeAndPidNull" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from RESOURCES
+        where resourcestype = #{resourceType}
+        and pid = 0 order by seq
+    </select>
+    
+    <!-- 查询所有父菜单 -->
+    <select id="findResourceAllByTypeAndPidNullOnlyHIS" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from RESOURCES
+        where resourcestype = #{resourceType}
+        and pid = 0 and sys_name='HIS' order by seq
+    </select>
+
+    <select id="findResourceAllByTypeAndPid" resultMap="BaseResultMap">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from RESOURCES
+        where resourcestype = #{resourceType}
+        and pid = #{pid} order by seq
+    </select>
+	
+	<select id="findResourceAllByTypeAndPidAndOnlyHIS" resultMap="BaseResultMap">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from RESOURCES
+        where resourcestype = #{resourceType}
+        and pid = #{pid} and sys_name='HIS' order by seq
+    </select>
+    
+    <select id="findResourceAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from RESOURCES order by seq
+    </select>
+
+    <delete id="deleteResourceById" parameterType="java.lang.Long">
+    	delete from RESOURCES where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.basic.model.Resource">
+      <!--   <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey> -->
+        insert into RESOURCES (id,name, url, description,icon, pid, seq,
+        status,resourcestype,sys_name,expnad,menu)
+        values (#{id,jdbcType=BIGINT},#{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        #{icon,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{seq,jdbcType=TINYINT}, #{status,jdbcType=TINYINT},
+        #{resourcetype,jdbcType=TINYINT},#{sysname,jdbcType=VARCHAR},#{expand,jdbcType=VARCHAR},#{menu,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateResource" parameterType="com.basic.model.Resource">
+        update RESOURCES
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                pid = #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="seq != null">
+                seq = #{seq,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="resourcetype != null">
+                resourcestype = #{resourcetype,jdbcType=TINYINT},
+            </if>
+            <if test="createdate != null">
+                createdate = sysdate,
+            </if>
+            <if test="sysname != null">
+                sys_name = #{sysname,jdbcType=VARCHAR},
+            </if>
+            <if test="expand != null">
+                expnad = #{expand,jdbcType=VARCHAR},
+            </if>
+            <if test="menu != null">
+                menu = #{menu,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
