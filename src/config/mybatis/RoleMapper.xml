@@ -12,20 +12,13 @@
     id, name, seq, description, status
     </sql>
 
-    <!-- <select id="findRolePageCondition" resultMap="BaseResultMap" parameterType="PageInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from role
-        order by ${sort} ${order}
-        limit #{from}, #{size}
-    </select> -->
     
-    <select id="findRolePageCondition" resultMap="BaseResultMap" parameterType="PageInfo">
-           SELECT * FROM ( select A.*,ROWNUM RN from ( select  <include refid="Base_Column_List"/>  from role order by ${sort} ${order}) A WHERE  <![CDATA[  ROWNUM <=#{size}  ]]>) 
-          <![CDATA[  WHERE RN >= #{from}  ]]>
+    <select id="findRolePageCondition" resultMap="BaseResultMap" parameterType="pageInfo">
+        select  <include refid="Base_Column_List"/>  from role order by ${sort} ${order}
+        limit #{from},#{end}
     </select>
 
-    <select id="findRolePageCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    <select id="findRolePageCount" resultType="java.lang.Integer" parameterType="pageInfo">
     select  count(*) count from role
    </select>
 

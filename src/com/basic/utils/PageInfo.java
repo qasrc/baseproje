@@ -79,6 +79,8 @@ public class PageInfo {
 		}
 		// 计算开始的记录和结束的记录  
 		this.from = (this.nowpage - 1) * this.pagesize;
+		this.end = from + this.pagesize;
+
 		this.size = this.pagesize;
 		// 排序字段，正序还是反序
 		this.sort = sort;

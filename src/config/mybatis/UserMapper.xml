@@ -90,51 +90,11 @@
         where id = #{id}
     </select>
 
-    <!-- 
-    <select id="findUserPageCondition" resultMap="userVoResultMap" parameterType="PageInfo">
-        SELECT
-        t.id,
-        loginname,
-        t.name,
-        password,
-        sex,
-        age,
-        usertype,
-        t.status,
-        organization_id,
-        t.createdate,
-        phone,
-        s.name AS organizationName,
-        o.id AS roleId,
-        o.name AS roleName
-        FROM
-        USERS t
-        LEFT JOIN user_role r ON t.id = r.user_id
-        LEFT JOIN role o ON r.role_id = o.id
-        LEFT JOIN organization s ON s.id = t.organization_id
-        <where>
-            <if test=" condition.name != null and condition.name != '' ">
-                t.name = #{condition.name}
-            </if>
-            <if test=" condition.organizationId != null ">
-               and t.organization_id = #{condition.organizationId}
-            </if>
-            <if test="condition.startTime != null">
-                <![CDATA[
-            and t.createdate >= #{condition.startTime}
-           ]]>
-            </if>
-            <if test="condition.endTime != null">
-                <![CDATA[
-            and t.createdate <= #{condition.endTime}
-        ]]>
-            </if> 
-        </where>
-        LIMIT #{from}, #{size}
-    </select> -->
 
-    <select id="findUserPageCondition" resultMap="userVoResultMap" parameterType="PageInfo">
-        SELECT * FROM ( select A.*,ROWNUM RN from (SELECT t.id,
+
+    <select id="findUserPageCondition" resultMap="userVoResultMap" parameterType="pageInfo">
+
+        SELECT t.id,
         t.code,
         t.password,
         t.name,
@@ -145,14 +105,12 @@
         t.phone,
         t.organization_id,
         t.user_id,
-        s.name AS organizationName,
         o.id AS roleId,
         o.name AS roleName
         FROM
         USERS t
         LEFT JOIN user_role r ON t.id = r.user_id
         LEFT JOIN role o ON r.role_id = o.id
-        LEFT JOIN organization s ON s.id = t.organization_id
         <where>
             <if test=" condition.name != null and condition.name != '' ">
                 t.name = #{condition.name}
@@ -171,11 +129,12 @@
         ]]>
             </if>
         </where>
-        ) A WHERE <![CDATA[ ROWNUM <=#{size} ]]>) WHERE  <![CDATA[  ROWNUM >= #{from}  ]]>
+        limit #{from},#{end}
+
     </select>
 
 
-    <select id="findUserPageCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    <select id="findUserPageCount" resultType="java.lang.Integer" parameterType="pageInfo">
         select count(*) count
         from users t
         <where>
@@ -208,7 +167,7 @@
         select S_USERS.Nextval from dual
     </select>-->
 
-    <select id="getUserId" resultType="String">
+    <select id="getUserId" resultType="string">
         select USER_SEQ_ID.Nextval from dual
     </select>
 

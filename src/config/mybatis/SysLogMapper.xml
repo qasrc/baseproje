@@ -20,23 +20,14 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="findDataGrid" resultMap="BaseResultMap" parameterType="PageInfo">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM(
-        SELECT A.*,ROWNUM RN
-        FROM (
+    <select id="findDataGrid" resultMap="BaseResultMap" parameterType="com.basic.utils.PageInfo">
         SELECT *
         FROM SYSLOG
         ORDER BY CREATE_TIME DESC
-        ) A
-        <![CDATA[ WHERE ROWNUM<=#{end} ]]>
-        )
-        WHERE RN >#{from}
-
+        limit #{from},#{end}
     </select>
 
-    <select id="findDataGridCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    <select id="findDataGridCount" resultType="java.lang.Integer" parameterType="com.basic.utils.PageInfo">
     select count(*) coun from syslog
   </select>
 
